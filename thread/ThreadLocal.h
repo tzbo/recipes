@@ -8,48 +8,37 @@
 #ifndef MUDUO_BASE_THREADLOCAL_H
 #define MUDUO_BASE_THREADLOCAL_H
 
-#include <boost/noncopyable.hpp>
 #include <pthread.h>
+#include <boost/noncopyable.hpp>
 
-namespace muduo
-{
+namespace muduo {
 
-template<typename T>
-class ThreadLocal : boost::noncopyable
-{
- public:
-  ThreadLocal()
-  {
-    pthread_key_create(&pkey_, &ThreadLocal::destructor);
-  }
+template <typename T>
+class ThreadLocal : boost::noncopyable {
+   public:
+    ThreadLocal() { pthread_key_create(&pkey_, &ThreadLocal::destructor); }
 
-  ~ThreadLocal()
-  {
-    pthread_key_delete(pkey_);
-  }
+    ~ThreadLocal() { pthread_key_delete(pkey_); }
 
-  T& value()
-  {
-    T* perThreadValue = static_cast<T*>(pthread_getspecific(pkey_));
-    if (!perThreadValue) {
-      T* newObj = new T();
-      pthread_setspecific(pkey_, newObj);
-      perThreadValue = newObj;
+    T& value() {
+        T* perThreadValue = static_cast<T*>(pthread_getspecific(pkey_));
+        if (!perThreadValue) {
+            T* newObj = new T();
+            pthread_setspecific(pkey_, newObj);
+            perThreadValue = newObj;
+        }
+        return *perThreadValue;
     }
-    return *perThreadValue;
-  }
 
- private:
+   private:
+    static void destructor(void* x) {
+        T* obj = static_cast<T*>(x);
+        delete obj;
+    }
 
-  static void destructor(void *x)
-  {
-    T* obj = static_cast<T*>(x);
-    delete obj;
-  }
-
- private:
-  pthread_key_t pkey_;
+   private:
+    pthread_key_t pkey_;
 };
 
-}
+}  // namespace muduo
 #endif

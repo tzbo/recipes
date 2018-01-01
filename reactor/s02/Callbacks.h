@@ -13,13 +13,12 @@
 
 #include "datetime/Timestamp.h"
 
-namespace muduo
-{
+namespace muduo {
 
 // All client visible callbacks go here.
 
 typedef boost::function<void()> TimerCallback;
 
-}
+}  // namespace muduo
 
 #endif  // MUDUO_NET_CALLBACKS_H

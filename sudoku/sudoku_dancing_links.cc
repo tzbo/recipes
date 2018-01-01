@@ -8,8 +8,7 @@ using namespace std;
 
 struct Node;
 typedef Node Column;
-struct Node
-{
+struct Node {
     Node* left;
     Node* right;
     Node* up;
@@ -19,22 +18,19 @@ struct Node
     int size;
 };
 
-const int kMaxNodes = 1 + 81*4 + 9*9*9*4;
+const int kMaxNodes = 1 + 81 * 4 + 9 * 9 * 9 * 4;
 const int kMaxColumns = 400;
 const int kRow = 100, kCol = 200, kBox = 300;
 
-
-struct Dance
-{
+struct Dance {
     Column* root_;
-    int*    inout_;
+    int* inout_;
     Column* columns_[400];
     vector<Node*> stack_;
-    Node    nodes_[kMaxNodes];
-    int     cur_node_;
+    Node nodes_[kMaxNodes];
+    int cur_node_;
 
-    Column* new_column(int n = 0)
-    {
+    Column* new_column(int n = 0) {
         assert(cur_node_ < kMaxNodes);
         Column* c = &nodes_[cur_node_++];
         memset(c, 0, sizeof(Column));
@@ -47,8 +43,7 @@ struct Dance
         return c;
     }
 
-    void append_column(int n)
-    {
+    void append_column(int n) {
         assert(columns_[n] == NULL);
 
         Column* c = new_column(n);
@@ -56,14 +51,13 @@ struct Dance
         columns_[n] = c;
     }
 
-    Node* new_row(int col)
-    {
+    Node* new_row(int col) {
         assert(columns_[col] != NULL);
         assert(cur_node_ < kMaxNodes);
 
         Node* r = &nodes_[cur_node_++];
 
-        //Node* r = new Node;
+        // Node* r = new Node;
         memset(r, 0, sizeof(Node));
         r->left = r;
         r->right = r;
@@ -75,23 +69,13 @@ struct Dance
         return r;
     }
 
-    int get_row_col(int row, int val)
-    {
-        return kRow+row*10+val;
-    }
+    int get_row_col(int row, int val) { return kRow + row * 10 + val; }
 
-    int get_col_col(int col, int val)
-    {
-        return kCol+col*10+val;
-    }
+    int get_col_col(int col, int val) { return kCol + col * 10 + val; }
 
-    int get_box_col(int box, int val)
-    {
-        return kBox+box*10+val;
-    }
+    int get_box_col(int box, int val) { return kBox + box * 10 + val; }
 
-    Dance(int inout[81]) : inout_(inout), cur_node_(0)
-    {
+    Dance(int inout[81]) : inout_(inout), cur_node_(0) {
         stack_.reserve(100);
 
         root_ = new_column();
@@ -105,7 +89,7 @@ struct Dance
         for (int i = 0; i < N; ++i) {
             int row = i / 9;
             int col = i % 9;
-            int box = row/3*3 + col/3;
+            int box = row / 3 * 3 + col / 3;
             int val = inout[i];
             rows[row][val] = true;
             cols[col][val] = true;
@@ -133,8 +117,8 @@ struct Dance
             if (inout[i] == 0) {
                 int row = i / 9;
                 int col = i % 9;
-                int box = row/3*3 + col/3;
-                //int val = inout[i];
+                int box = row / 3 * 3 + col / 3;
+                // int val = inout[i];
                 for (int v = 1; v < 10; ++v) {
                     if (!(rows[row][v] || cols[col][v] || boxes[box][v])) {
                         Node* n0 = new_row(i);
@@ -150,8 +134,7 @@ struct Dance
         }
     }
 
-    Column* get_min_column()
-    {
+    Column* get_min_column() {
         Column* c = root_->right;
         int min_size = c->size;
         if (min_size > 1) {
@@ -167,8 +150,7 @@ struct Dance
         return c;
     }
 
-    void cover(Column* c)
-    {
+    void cover(Column* c) {
         c->right->left = c->left;
         c->left->right = c->right;
         for (Node* row = c->down; row != c; row = row->down) {
@@ -180,8 +162,7 @@ struct Dance
         }
     }
 
-    void uncover(Column* c)
-    {
+    void uncover(Column* c) {
         for (Node* row = c->up; row != c; row = row->up) {
             for (Node* j = row->left; j != row; j = j->left) {
                 j->col->size++;
@@ -193,8 +174,7 @@ struct Dance
         c->left->right = c;
     }
 
-    bool solve()
-    {
+    bool solve() {
         if (root_->left == root_) {
             for (size_t i = 0; i < stack_.size(); ++i) {
                 Node* n = stack_[i];
@@ -208,7 +188,7 @@ struct Dance
                     n = n->right;
                 }
 
-                //assert(cell != -1 && val != -1);
+                // assert(cell != -1 && val != -1);
                 inout_[cell] = val;
             }
             return true;
@@ -233,16 +213,14 @@ struct Dance
         return false;
     }
 
-    void put_left(Column* old, Column* nnew)
-    {
+    void put_left(Column* old, Column* nnew) {
         nnew->left = old->left;
         nnew->right = old;
         old->left->right = nnew;
         old->left = nnew;
     }
 
-    void put_up(Column* old, Node* nnew)
-    {
+    void put_up(Column* old, Node* nnew) {
         nnew->up = old->up;
         nnew->down = old;
         old->up->down = nnew;
@@ -252,8 +230,7 @@ struct Dance
     }
 };
 
-bool solve_sudoku_dancing_links(int unused)
-{
-  Dance d(board);
-  return d.solve();
+bool solve_sudoku_dancing_links(int unused) {
+    Dance d(board);
+    return d.solve();
 }

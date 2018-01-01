@@ -10,32 +10,27 @@
 
 #include "datetime/copyable.h"
 
-namespace muduo
-{
+namespace muduo {
 
 class Timer;
 
 ///
 /// An opaque identifier, for canceling Timer.
 ///
-class TimerId : public muduo::copyable
-{
- public:
-  TimerId(Timer* timer = NULL, int64_t seq = 0)
-    : timer_(timer),
-      sequence_(seq)
-  {
-  }
+class TimerId : public muduo::copyable {
+   public:
+    TimerId(Timer* timer = NULL, int64_t seq = 0)
+        : timer_(timer), sequence_(seq) {}
 
-  // default copy-ctor, dtor and assignment are okay
+    // default copy-ctor, dtor and assignment are okay
 
-  friend class TimerQueue;
+    friend class TimerQueue;
 
- private:
-  Timer* timer_;
-  int64_t sequence_;
+   private:
+    Timer* timer_;
+    int64_t sequence_;
 };
 
-}
+}  // namespace muduo
 
 #endif  // MUDUO_NET_TIMERID_H

@@ -11,21 +11,18 @@ class InetAddress;
 class TlsStream;
 typedef std::unique_ptr<TlsStream> TlsStreamPtr;
 
-class TlsAcceptor : noncopyable
-{
- public:
-  TlsAcceptor(TlsConfig* config, const InetAddress& listenAddr);
+class TlsAcceptor : noncopyable {
+   public:
+    TlsAcceptor(TlsConfig* config, const InetAddress& listenAddr);
 
-  ~TlsAcceptor() = default;
-  TlsAcceptor(TlsAcceptor&&) = default;
-  TlsAcceptor& operator=(TlsAcceptor&&) = default;
+    ~TlsAcceptor() = default;
+    TlsAcceptor(TlsAcceptor&&) = default;
+    TlsAcceptor& operator=(TlsAcceptor&&) = default;
 
-  // thread safe
-  TlsStreamPtr accept();
+    // thread safe
+    TlsStreamPtr accept();
 
- private:
-  TlsContext context_;
-  Socket listenSock_;
+   private:
+    TlsContext context_;
+    Socket listenSock_;
 };
-
-

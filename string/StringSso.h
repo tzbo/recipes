@@ -11,8 +11,7 @@
 #include <stddef.h>  // size_t
 #include <stdint.h>  // uint32_t
 
-namespace muduo
-{
+namespace muduo {
 
 /**
  * Short string optimized.
@@ -25,48 +24,46 @@ namespace muduo
  * local buffer == 19 on 64-bit
  *
  */
-class StringSso // : copyable
-                // public boost::less_than_comparable<StringSso>,
-                // public boost::less_than_comparable<StringSso, const char*>,
-                // public boost::equality_comparable<StringSso>,
-                // public boost::equality_comparable<StringSso, const char*>,
-                // public boost::addable<StringSso>,
-                // public boost::addable<StringSso, const char*>
+class StringSso  // : copyable
+                 // public boost::less_than_comparable<StringSso>,
+                 // public boost::less_than_comparable<StringSso, const char*>,
+                 // public boost::equality_comparable<StringSso>,
+                 // public boost::equality_comparable<StringSso, const char*>,
+                 // public boost::addable<StringSso>,
+                 // public boost::addable<StringSso, const char*>
 {
- public:
-  typedef char          value_type;
-  typedef uint32_t      size_type;
-  typedef int32_t       difference_type;
-  typedef value_type&   reference;
-  typedef const char&   const_reference;
-  typedef value_type*   pointer;
-  typedef const char*   const_pointer;
-  typedef pointer       iterator;
-  typedef const_pointer const_iterator;
+   public:
+    typedef char value_type;
+    typedef uint32_t size_type;
+    typedef int32_t difference_type;
+    typedef value_type& reference;
+    typedef const char& const_reference;
+    typedef value_type* pointer;
+    typedef const char* const_pointer;
+    typedef pointer iterator;
+    typedef const_pointer const_iterator;
 
-  static const size_type npos = -1;
+    static const size_type npos = -1;
 
-  StringSso(const StringSso&);
-  StringSso& operator=(const StringSso&);
+    StringSso(const StringSso&);
+    StringSso& operator=(const StringSso&);
 
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
-  StringSso(StringSso&&);
-  StringSso& operator=(StringSso&&);
+    StringSso(StringSso&&);
+    StringSso& operator=(StringSso&&);
 #endif
 
- private:
+   private:
+    const static int kLocalBuffer = sizeof(void*) == 8 ? 19 : 15;
 
-  const static int kLocalBuffer = sizeof(void*) == 8 ? 19 : 15;
+    char* start_;
+    uint32_t size_;
 
-  char* start_;
-  uint32_t size_;
-
-  union
-  {
-    uint32_t capacity_;
-    char buf_[kLocalBuffer+1];
-  } data_;
+    union {
+        uint32_t capacity_;
+        char buf_[kLocalBuffer + 1];
+    } data_;
 };
 
-}
+}  // namespace muduo
 #endif  // MUDUO_BASE_STRINGSSO_H

@@ -9,21 +9,18 @@ class InetAddress;
 class TcpStream;
 typedef std::unique_ptr<TcpStream> TcpStreamPtr;
 
-class Acceptor : noncopyable
-{
- public:
-  explicit Acceptor(const InetAddress& listenAddr);
+class Acceptor : noncopyable {
+   public:
+    explicit Acceptor(const InetAddress& listenAddr);
 
-  ~Acceptor() = default;
-  Acceptor(Acceptor&&) = default;
-  Acceptor& operator=(Acceptor&&) = default;
+    ~Acceptor() = default;
+    Acceptor(Acceptor&&) = default;
+    Acceptor& operator=(Acceptor&&) = default;
 
-  // thread safe
-  TcpStreamPtr accept();
-  Socket acceptSocketOrDie();
+    // thread safe
+    TcpStreamPtr accept();
+    Socket acceptSocketOrDie();
 
- private:
-  Socket listenSock_;
+   private:
+    Socket listenSock_;
 };
-
-

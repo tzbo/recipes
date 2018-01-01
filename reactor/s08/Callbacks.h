@@ -13,8 +13,7 @@
 
 #include "datetime/Timestamp.h"
 
-namespace muduo
-{
+namespace muduo {
 
 // All client visible callbacks go here.
 
@@ -23,12 +22,11 @@ class TcpConnection;
 typedef boost::shared_ptr<TcpConnection> TcpConnectionPtr;
 
 typedef boost::function<void()> TimerCallback;
-typedef boost::function<void (const TcpConnectionPtr&)> ConnectionCallback;
-typedef boost::function<void (const TcpConnectionPtr&,
-                              Buffer* buf,
-                              Timestamp)> MessageCallback;
-typedef boost::function<void (const TcpConnectionPtr&)> CloseCallback;
+typedef boost::function<void(const TcpConnectionPtr&)> ConnectionCallback;
+typedef boost::function<void(const TcpConnectionPtr&, Buffer* buf, Timestamp)>
+    MessageCallback;
+typedef boost::function<void(const TcpConnectionPtr&)> CloseCallback;
 
-}
+}  // namespace muduo
 
 #endif  // MUDUO_NET_CALLBACKS_H

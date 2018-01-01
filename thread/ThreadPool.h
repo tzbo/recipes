@@ -18,34 +18,32 @@
 
 #include <deque>
 
-namespace muduo
-{
+namespace muduo {
 
-class ThreadPool : boost::noncopyable
-{
- public:
-  typedef boost::function<void ()> Task;
+class ThreadPool : boost::noncopyable {
+   public:
+    typedef boost::function<void()> Task;
 
-  explicit ThreadPool(const std::string& name = std::string());
-  ~ThreadPool();
+    explicit ThreadPool(const std::string& name = std::string());
+    ~ThreadPool();
 
-  void start(int numThreads);
-  void stop();
+    void start(int numThreads);
+    void stop();
 
-  void run(const Task& f);
+    void run(const Task& f);
 
- private:
-  void runInThread();
-  Task take();
+   private:
+    void runInThread();
+    Task take();
 
-  MutexLock mutex_;
-  Condition cond_;
-  std::string name_;
-  boost::ptr_vector<muduo::Thread> threads_;
-  std::deque<Task> queue_;
-  bool running_;
+    MutexLock mutex_;
+    Condition cond_;
+    std::string name_;
+    boost::ptr_vector<muduo::Thread> threads_;
+    std::deque<Task> queue_;
+    bool running_;
 };
 
-}
+}  // namespace muduo
 
 #endif
